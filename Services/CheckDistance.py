@@ -1,4 +1,4 @@
-from Constants.GpioAddresses import ULTRASONIC_GPIO_ECHO, ULTRASONIC_GPIO_TRIGGER
+from Constants.GpioAddress import ULTRASONIC_GPIO_ECHO, ULTRASONIC_GPIO_TRIGGER
 import RPi.GPIO as GPIO
 import time
  

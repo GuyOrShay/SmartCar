@@ -1,5 +1,5 @@
 import time
-from Constants.GpioAddresses import BUZZER_GPIO
+from Constants.GpioAddress import BUZZER_GPIO
 import RPi.GPIO as GPIO
 
 
