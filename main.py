@@ -1,7 +1,9 @@
-from Services.LcdI2CWriter import LcdI2CWriter
+from Traffic_sign_classification.predict import traffic
 
 
-lcd = LcdI2CWriter()
 if __name__ == '__main__':   #Program entry
-    lcd.Write("I Love You",1)
-    lcd.Write("My Izolda",2)
+
+    traffic = traffic("Traffic_sign_classification/inputImage.jpg")
+    result = traffic.trafficsign()
+    print(result)
+
