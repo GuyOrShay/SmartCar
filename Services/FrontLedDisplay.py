@@ -13,9 +13,16 @@ matrix_back = (0x00, 0x00, 0x00, 0x00, 0x48, 0x24, 0x12, 0x09, 0x09, 0x12, 0x24,
 matrix_left = (0x00, 0x00, 0x00, 0x00, 0x18, 0x24, 0x42, 0x99, 0x24, 0x42, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00)
 matrix_right = (0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x42, 0x24, 0x99, 0x42, 0x24, 0x18, 0x00, 0x00, 0x00, 0x00)
 
+matrix_names = {
+    "forword" : matrix_forward,
+    "left" : matrix_left,
+    "right" : matrix_right,
+    "back" : matrix_back
+}
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LED_FRONT_DISPLAY_SCLK,GPIO.OUT)
 GPIO.setup(LED_FRONT_DISPLAY_DIO,GPIO.OUT)
+
 
 def nop():
     time.sleep(0.00003)
@@ -62,15 +69,18 @@ def end():
     nop()
    
 def matrix_display(matrix_value):
+    if (matrix_names[matrix_value]):
+        matrix = matrix_names[matrix_value]
+    else:
+        return
+    
     start()
     send_date(0xc0)
     
     for i in range(0,16):
-        send_date(matrix_value[i])
+        send_date(matrix[i])
         
     end()
     start()
     send_date(0x8A)
     end()
-
-matrix_display(matrix_forward)

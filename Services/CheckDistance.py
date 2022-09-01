@@ -18,6 +18,5 @@ def distance():
     while GPIO.input(ULTRASONIC_GPIO_ECHO):
         pass
     t2 = time.time()
-    print("distance is %d " % (((t2 - t1)* 340 / 2) * 100))
     time.sleep(0.01)
     return ((t2 - t1)* 340 / 2) * 100
