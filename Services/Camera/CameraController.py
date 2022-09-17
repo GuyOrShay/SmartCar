@@ -1,7 +1,5 @@
 
 import cv2
-
-
 class cameraController:
     def __init__(self):
         self.capture = cv2.VideoCapture(0)
