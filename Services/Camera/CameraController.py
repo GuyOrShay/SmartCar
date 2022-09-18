@@ -7,12 +7,12 @@ class cameraController:
         self.capture.set(10, 55)  # Screen brightness
 
     def getStatus(self):
+        flag = False
         if (self.capture.isOpened()):
             # Open the camera and read the image
             flag, image = self.capture.read()
             if(flag):
-                    cv2.imwrite("status.jpg", image)
-        self.capture.release()
+                    cv2.imwrite("./Services/Camera/status.jpg", image)
         return flag
 
     def playVideo(self):
