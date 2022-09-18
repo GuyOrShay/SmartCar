@@ -1,4 +1,5 @@
 from Services.Camera.CameraController import cameraController
+from TrafficReportModule.httpServer import startServer
 from Traffic_sign_classification.predict import traffic
 from Services.AlertPlayer import alertPlayer
 
@@ -9,7 +10,8 @@ if __name__ == '__main__':   #Program entry
    
    alert = alertPlayer()
    camera = cameraController()
-   print("Start")
+   startServer()
+ print("Start")
 
    alert.play();  
    print("Finish")
@@ -22,5 +24,3 @@ if __name__ == '__main__':   #Program entry
             if (sign == "STOP"):
                 print(sign)
                 alert.play()
-            
-

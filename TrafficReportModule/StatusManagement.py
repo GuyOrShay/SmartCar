@@ -1,5 +1,6 @@
 import json
-from DriveStatus import DriveStatus
+
+from TrafficReportModule.DriveStatus import DriveStatus
 
 statuses = []
 def insertStatus( description , severaty):
