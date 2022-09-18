@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify, render_template
 import os
 from flask_cors import CORS, cross_origin
 
-from DriveStatus import DriveStatus
-from StatusManagement import getStatuses, insertStatus
+from TrafficReportModule.StatusManagement import getStatuses, insertStatus
+
 
 os.putenv('LANG', 'en_US.UTF-8')
 os.putenv('LC_ALL', 'en_US.UTF-8')
@@ -42,5 +42,6 @@ def home():
 #     result = clApp.classifier.trafficsign()
 #     return jsonify(result)
 
-def start():
+def startServer():
     app.run(host='0.0.0.0', port=5000)
+    return
