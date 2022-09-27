@@ -1,10 +1,11 @@
 import numpy as np
 import cv2
 import os,time
-
 import tensorflow as tf
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_utils
+from PIL import Image
+
 # Init camera 
 cap = cv2.VideoCapture(0)
 cap.set(3,640) # set Width
@@ -47,6 +48,8 @@ with detection_graph.as_default():
 #            frame = cv2.flip(frame, -1) # Flip camera vertically
 #             frame = cv2.resize(frame,(320,240))
             ##############
+            #frame_i = cv2.imread("./Services/Camera/status2.jpg")
+            #frame = cv2.resize(frame_i,[640,640])
             image_np_expanded = np.expand_dims(frame, axis=0) 
             image_tensor = detection_graph.get_tensor_by_name('image_tensor:0') 
             detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0') 
@@ -54,12 +57,12 @@ with detection_graph.as_default():
             detection_classes = detection_graph.get_tensor_by_name('detection_classes:0') 
             num_detections = detection_graph.get_tensor_by_name('num_detections:0')
             
-            print('Running detection..') 
+            #print('Running detection..') 
             (boxes, scores, classes, num) = sess.run( 
                 [detection_boxes, detection_scores, detection_classes, num_detections], 
                 feed_dict={image_tensor: image_np_expanded}) 
-     
-            print('Done.  Visualizing..') 
+        
+            #print('Done.  Visualizing..') 
             vis_utils.visualize_boxes_and_labels_on_image_array(
                     frame,
                     np.squeeze(boxes),
@@ -68,17 +71,25 @@ with detection_graph.as_default():
                     category_index,
                     use_normalized_coordinates=True,
                     line_thickness=8)
-                    
-            print(np.squeeze(classes).astype(np.int32))
+
+            #print(scores)
+            #s = [x for x in category_index if x == 44]  # list of all elements with .n==30
+            #print(s)
             ##############
-            # fps = fps + 1
-            # mfps = fps / (time.time() - t_start)
-            # cv2.putText(frame, "FPS " + str(int(mfps)), (10,10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 2)
-            # cv2.imshow('frame', frame)
+            
+            detected = classes[0]
+            for idx, x in enumerate(detected):
+                if(boxes[0][idx][0] != 0.0):
+                    print(category_index[detected[idx]]['name'] , scores[0][idx])
+            fps = fps + 1
+            mfps = fps / (time.time() - t_start)
+            cv2.putText(frame, "FPS " + str(int(mfps)), (10,10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 2)
+            cv2.imshow('frame', frame)
      
-            k = cv2.waitKey(30) & 0xff
+            k = cv2.waitKey(1000) & 0xff
             if k == 27: # press 'ESC' to quit
                 break
  
 cap.release()
 cv2.destroyAllWindows()
+
