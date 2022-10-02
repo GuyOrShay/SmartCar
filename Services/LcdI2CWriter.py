@@ -1,5 +1,3 @@
-
-
 from rpi_lcd import LCD
 
 class LcdI2CWriter:

@@ -3,6 +3,7 @@ from Services.Camera.CameraController import cameraController
 from TrafficReportModule.httpServer import startServer
 from Traffic_sign_classification.predict import traffic
 from Services.AlertPlayer import alertPlayer
+import multiprocessing
 
 
 if __name__ == '__main__':   #Program entry
@@ -12,12 +13,12 @@ if __name__ == '__main__':   #Program entry
    traffic_sign_predict = traffic("./Services/Camera/status.jpg") 
    
    alert = alertPlayer()
-   camera = cameraController()
-   startServer()
-   print("Start")
+   p = multiprocessing.Process(target=startServer, args=())
+   p.daemon = True
+   p.start()
 
-   alert.play();  
-   print("Finish")
+   camera = cameraController()
+   
    while True:
         isPictureTaken = camera.getStatus()
         print(isPictureTaken)
