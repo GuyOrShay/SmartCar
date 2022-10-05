@@ -5,7 +5,7 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 
-def distance():
+def check_distance():
     GPIO.setup(ULTRASONIC_GPIO_TRIGGER, GPIO.OUT)
     GPIO.setup(ULTRASONIC_GPIO_ECHO, GPIO.IN )
 

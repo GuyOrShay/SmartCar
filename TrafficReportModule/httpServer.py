@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import os
 from flask_cors import CORS, cross_origin
+import multiprocessing
 
 from TrafficReportModule.StatusManagement import getStatuses, insertStatus
 
@@ -45,3 +46,8 @@ def home():
 def startServer():
     app.run(host='0.0.0.0', port=5000)
     return
+
+def startHttpServer():
+  p = multiprocessing.Process(target=startServer, args=())
+  p.daemon = True
+  p.start()
