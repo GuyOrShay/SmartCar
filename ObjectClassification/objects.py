@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import cv2
 import os
@@ -22,33 +23,38 @@ class objects:
         print('Loading model')
         self.detection_graph = tf.Graph() 
         with self.detection_graph.as_default(): 
-            od_graph_def = tf.compat.v1.GraphDef()
+            self.od_graph_def = tf.compat.v1.GraphDef()
             with tf.io.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid: 
                 serialized_graph = fid.read() 
-                od_graph_def.ParseFromString(serialized_graph) 
-                tf.import_graph_def(od_graph_def, name='')
+                self.od_graph_def.ParseFromString(serialized_graph) 
+                tf.import_graph_def(self.od_graph_def, name='')
         label_map = label_map_util.load_labelmap(self.PATH_TO_LABELS) 
         categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=self.NUM_CLASSES, use_display_name=True) 
         self.category_index = label_map_util.create_category_index(categories)
+        self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0') 
+        self.detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0') 
+        self.detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0') 
+        self.detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0') 
+        self.num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
         print('Finish Load Graph..')
     
     def predict(self):
-        self.detection_graph.as_default()
-        sess =tf.compat.v1.Session(graph=self.detection_graph)
-        frame_i = cv2.imread( self.filename)
-        frame = cv2.resize(frame_i,[640,640])
-        image_np_expanded = np.expand_dims(frame, axis=0) 
-        image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0') 
-        detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0') 
-        detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0') 
-        detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0') 
-        num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
-        
-        (boxes, scores, classes, num) = sess.run( 
-            [detection_boxes, detection_scores, detection_classes, num_detections], 
-            feed_dict={image_tensor: image_np_expanded}) 
+        with self.detection_graph.as_default():
+            with tf.compat.v1.Session(graph=self.detection_graph) as sess:
+                frame_i = cv2.imread( self.filename)
+                frame = cv2.resize(frame_i,[640,640])
+                image_np_expanded = np.expand_dims(frame, axis=0) 
+                
+                st = time.time()
+                (self.boxes, self.scores, self.classes, self.num) = sess.run( 
+                    [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections], 
+                    feed_dict={self.image_tensor: image_np_expanded}) 
+                et = time.time()
+                elapsed_time = et - st
+                print('Execution time of prediction:', elapsed_time, 'seconds')
+                
 
-        return self.detectObjectAndaccuracy(boxes, classes, scores)
+                return self.detectObjectAndaccuracy(self.boxes, self.classes, self.scores)
         
     def detectObjectAndaccuracy(self ,boxes, classes, scores):
         objects = []

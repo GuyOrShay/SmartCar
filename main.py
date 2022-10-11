@@ -1,3 +1,4 @@
+from ObjectClassification.object__detection import test_tensor
 from ObjectClassification.objects import objects
 from Services.Camera.CameraController import cameraController
 from Services.CheckDistance import check_distance
@@ -7,29 +8,37 @@ from TrafficReportModule.httpServer import startHttpServer
 from Traffic_sign_classification.predict import traffic
 from Services.AlertPlayer import alertPlayer
 from Services.getIR import recive_command_from_remote,init_id
+import time
 
 
 if __name__ == '__main__':   #Program entry
-    
-#    print(object_detection.predict())
+   # test_tensor()
+   # print(object_detection.predict())
    traffic_sign_predict = traffic("./Services/Camera/status.jpg") 
    object_detection = objects("./Services/Camera/status.jpg")
    object_detection.load_model()
    init_id()
-   startHttpServer()
+   # startHttpServer()
    alert = alertPlayer()
    motorDrive = MotorDrive()
    camera = cameraController()
+   print("Start listening..... !!")
    while True:
         command = recive_command_from_remote()
+        print("Run prediction..... !!")
+        detected_objects = object_detection.predict()
+        alert.play()
         if(command != 0x00):
           isPictureTaken = camera.getStatus()
           motorDrive.drive_cmd(command)
           matrix_display(command)
           if(isPictureTaken):
-            sign = traffic_sign_predict.trafficsign()
+            # sign = traffic_sign_predict.trafficsign()
             detected_objects = object_detection.predict()
+            for obj in detected_objects:
+              print(obj.name + " - " + obj.accuracy)
           distance_from_object = check_distance()
+          print("Distance : " + distance_from_object)
           if(distance_from_object < 40):
             alert.play()
 

@@ -20,12 +20,12 @@ CORS(app)
     #     self.classifier = traffic(self.filename)
 
 
-insertStatus("I am testing the api now , let me play" , "Warning")
-insertStatus("Now i wolud like to check the two params" , "Error")
-insertStatus("Close to object 40cm" , "Warning")
-insertStatus("Close to object 20cm" , "Error")
-insertStatus("More drivers will be upload" , "Warning")
-insertStatus("Now i wolud like to check the two params" , "Error")
+# insertStatus("I am testing the api now , let me play" , "Warning")
+# insertStatus("Now i wolud like to check the two params" , "Error")
+# insertStatus("Close to object 40cm" , "Warning")
+# insertStatus("Close to object 20cm" , "Error")
+# insertStatus("More drivers will be upload" , "Warning")
+# insertStatus("Now i wolud like to check the two params" , "Error")
 
 @app.route("/status", methods=['GET'])
 @cross_origin()
