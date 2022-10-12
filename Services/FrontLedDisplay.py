@@ -69,10 +69,11 @@ def end():
     nop()
    
 def matrix_display(matrix_value):
-    if (matrix_names[matrix_value]):
+    if (matrix_value in matrix_names):
         matrix = matrix_names[matrix_value]
     else:
-        return
+        return 
+
     
     start()
     send_date(0xc0)
