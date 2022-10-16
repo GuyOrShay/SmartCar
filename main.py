@@ -3,6 +3,7 @@ from ObjectClassification.objects import objects
 from Services.Camera.CameraController import cameraController
 from Services.CheckDistance import check_distance
 from Services.FrontLedDisplay import matrix_display
+from Services.LaneAsistent import init_lane_sensors, is_car_in_road
 from Services.MotorDrive import MotorDrive
 from TrafficReportModule.httpServer import startHttpServer
 from Traffic_sign_classification.predict import traffic
@@ -22,6 +23,7 @@ if __name__ == '__main__':   #Program entry
    alert = alertPlayer()
    motorDrive = MotorDrive()
    camera = cameraController()
+   init_lane_sensors()
    object_detection.predict()
    print("Start listening..... !!")
    while True:
@@ -39,6 +41,8 @@ if __name__ == '__main__':   #Program entry
           print("Distance :  {:.2f} cm".format(distance_from_object))
           if(distance_from_object < 40):
             alert.play()
+          if(is_car_in_road()):
+            print("The Car in road")
 
 #    while True:
 #         isPictureTaken = camera.getStatus()
