@@ -22,11 +22,11 @@ if __name__ == '__main__':   #Program entry
    alert = alertPlayer()
    motorDrive = MotorDrive()
    camera = cameraController()
+   object_detection.predict()
    print("Start listening..... !!")
    while True:
         command = recive_command_from_remote()
         if(command != 0x00):
-          print(command)
           isPictureTaken = camera.getStatus()
           motorDrive.drive_cmd(command)
           matrix_display(command)
@@ -34,9 +34,9 @@ if __name__ == '__main__':   #Program entry
             # sign = traffic_sign_predict.trafficsign()
             detected_objects = object_detection.predict()
             for obj in detected_objects:
-              print(obj.name + " - " + obj.accuracy)
+              print(obj.name , " - " , obj.accuracy)
           distance_from_object = check_distance()
-          print("Distance : " + str(distance_from_object))
+          print("Distance :  {:.2f} cm".format(distance_from_object))
           if(distance_from_object < 40):
             alert.play()
 

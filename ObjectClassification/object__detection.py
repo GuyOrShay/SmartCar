@@ -92,7 +92,7 @@ def test_tensor():
                 cv2.putText(frame, "FPS " + str(int(mfps)), (10,10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 2)
                 cv2.imshow('frame', frame)
         
-                k = cv2.waitKey(1000) & 0xff
+                k = cv2.waitKey(500) & 0xff
                 if k == 27: # press 'ESC' to quit
                     break
     

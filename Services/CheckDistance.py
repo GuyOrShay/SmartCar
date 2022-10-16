@@ -9,11 +9,11 @@ def check_distance():
     GPIO.setup(ULTRASONIC_GPIO_TRIGGER, GPIO.OUT)
     GPIO.setup(ULTRASONIC_GPIO_ECHO, GPIO.IN )
 
-    # 10us is the trigger signal
     GPIO.output(ULTRASONIC_GPIO_TRIGGER, GPIO.HIGH)
     time.sleep(0.00001)  #10us
     GPIO.output(ULTRASONIC_GPIO_TRIGGER, GPIO.LOW)
-    
+    while not GPIO.input(ULTRASONIC_GPIO_ECHO):
+        pass
     t1 = time.time()
     while GPIO.input(ULTRASONIC_GPIO_ECHO):
         pass
