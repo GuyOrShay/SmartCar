@@ -4,7 +4,7 @@ class cameraController:
     def __init__(self):
         self.capture = cv2.VideoCapture(0)
         self.capture.set(3, 480)  # Gets the video frame width
-        self.capture.set(10, 55)  # Screen brightness
+        self.capture.set(10, 100)  # Screen brightness
 
     def getStatus(self):
         flag = False

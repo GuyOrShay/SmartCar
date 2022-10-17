@@ -1,3 +1,4 @@
+from pydoc import describe
 from ObjectClassification.object__detection import test_tensor
 from ObjectClassification.objects import objects
 from Services.Camera.CameraController import cameraController
@@ -5,6 +6,7 @@ from Services.CheckDistance import check_distance
 from Services.FrontLedDisplay import matrix_display
 from Services.LaneAsistent import init_lane_sensors, is_car_in_road
 from Services.MotorDrive import MotorDrive
+from TrafficReportModule.StatusManagement import insertStatus
 from TrafficReportModule.httpServer import startHttpServer
 from Traffic_sign_classification.predict import traffic
 from Services.AlertPlayer import alertPlayer
@@ -35,14 +37,20 @@ if __name__ == '__main__':   #Program entry
           if(isPictureTaken):
             # sign = traffic_sign_predict.trafficsign()
             detected_objects = object_detection.predict()
+            distance_from_object = check_distance()
             for obj in detected_objects:
-              print(obj.name , " - " , obj.accuracy)
-          distance_from_object = check_distance()
+              accuracy = int(obj.accuracy * 100)
+              if (accuracy > 80):
+                if(distance_from_object < 10):
+                  describe = "You close to crash into " , obj.name , " (" ,obj.accuricy, ") " 
+                  insertStatus( describe,"Error")
+                else:
+                  describe = "You close to " , obj.name , " (" ,obj.accuricy, ") " , distance_from_object , " cm"
+                  insertStatus(describe,"Warning")
           print("Distance :  {:.2f} cm".format(distance_from_object))
-          if(distance_from_object < 40):
-            alert.play()
-          if(is_car_in_road()):
-            print("The Car in road")
+          
+          if(is_car_in_road() == False):
+            insertStatus(" deviating from the path ","Error")
 
 #    while True:
 #         isPictureTaken = camera.getStatus()
