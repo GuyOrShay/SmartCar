@@ -47,11 +47,10 @@ if __name__ == '__main__':   #Program entry
                 else:
                   describe = "You close to " , obj.name , " (" ,obj.accuricy, ") " , distance_from_object , " cm"
                   insertStatus(describe,"Warning")
-          print("Distance :  {:.2f} cm".format(distance_from_object))
-          
+
           if(is_car_in_road() == False):
             insertStatus(" deviating from the path ","Error")
-
+          camera.moveHorizontal()
 #    while True:
 #         isPictureTaken = camera.getStatus()
 #         print(isPictureTaken)
