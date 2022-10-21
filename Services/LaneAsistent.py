@@ -12,6 +12,6 @@ def init_lane_sensors():
 def is_car_in_road():
     # if the read value is 1 , the sensor found black surface
     right_val = GPIO.input(RIGHT_LANE_SENSOR) # read the value 
-    right_val = GPIO.input(MIDDLE_LANE_SENSOR)
+    middle_val = GPIO.input(MIDDLE_LANE_SENSOR)
     left_val = GPIO.input(LEFT_LANE_SENSOR)
-    return ((right_val + right_val + left_val) == 3)        
+    return ((right_val + middle_val + left_val) > 0)        

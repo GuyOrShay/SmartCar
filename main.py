@@ -37,24 +37,23 @@ def start(TrafficReportModule):
             # sign = traffic_sign_predict.trafficsign()
             detected_objects = object_detection.predict()
             distance_from_object = check_distance()
+            alert.play(distance_from_object)
             for obj in detected_objects:
               accuracy = int(obj.accuracy * 100)
               print(obj.name , " ___ ",accuracy)
-              accuracy = int(obj.accuracy * 100)
-              if (accuracy > 80):
-                print("Insert document")
+              if (accuracy > 70):
                 if(distance_from_object < 10):
-                  describe = "You close to crash into " , obj.name , " (" ,accuracy, ") " 
+                  describe = "You close to crash in {} ({}%) {} cm".format(obj.name,accuracy,distance_from_object)
                   trafficReportModule.insertStatus( describe,"Error")
                 else:
-                  describe = "You close to " , obj.name , " (" ,obj.accuracy, ") " , distance_from_object , " cm"
+                  describe = "You close to {} ({}%) {} cm".format(obj.name,accuracy,distance_from_object)
                   trafficReportModule.insertStatus(describe,"Warning")
           else:
             print("Error : Picture can't be taken") 
           lane_status = is_car_in_road()
           if(prevoius_lane_status != lane_status):  
             if(lane_status == False):
-              trafficReportModule.insertStatus(" deviating from the path ","Error")
+              trafficReportModule.insertStatus("deviating from the path ","Error")
             prevoius_lane_status = lane_status
 
 if __name__ == '__main__':   #Program entry

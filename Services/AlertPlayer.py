@@ -11,9 +11,11 @@ class alertPlayer:
         global Buzz                     # Assign a global variable to replace GPIO.PWM
         Buzz = GPIO.PWM(BUZZER_GPIO, 440) # 440 is initial frequency.
     
-    def play(self):
-        Buzz.start(50) 
-        time.sleep(1)  # wait for 1 ms
-        Buzz.start(0) 
+    def play(self,distance):
+        print(distance)
+        if(distance < 10):
+            Buzz.start(50) 
+        else:
+            Buzz.start(0) 
         
             

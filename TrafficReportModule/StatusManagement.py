@@ -7,6 +7,8 @@ class TrafficReportModule:
     def __init__(self):
         self.statuses = []
         self.path = "./TrafficReportModule/status.json"
+        with open(self.path, 'w') as json_file:
+            json.dump(self.statuses, json_file)
     def insertStatus( self,description , severaty):
         newStatus= DriveStatus(description,severaty)
         statuses = []

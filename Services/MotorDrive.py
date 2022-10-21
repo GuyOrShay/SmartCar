@@ -91,7 +91,7 @@ class MotorDrive:
             GPIO.output(R_IN3,GPIO.LOW)  #Lower Right forward
             GPIO.output(R_IN4,GPIO.HIGH)
             self.pwm_R2.ChangeDutyCycle(70)
-            time.sleep(0.1)
+            time.sleep(0.15)
             self.stop()
         elif(key_val==0x40):
             print("Button ok")
@@ -110,7 +110,7 @@ class MotorDrive:
             GPIO.output(R_IN3,GPIO.HIGH)  #Lower Right forward
             GPIO.output(R_IN4,GPIO.LOW)
             self.pwm_R2.ChangeDutyCycle(70)
-            time.sleep(0.1)
+            time.sleep(0.15)
             self.stop()
         elif(key_val==0x15):
             print("Button down")
@@ -126,7 +126,7 @@ class MotorDrive:
             GPIO.output(R_IN3,GPIO.HIGH)
             GPIO.output(R_IN4,GPIO.LOW)
             self.pwm_R2.ChangeDutyCycle(50)
-            time.sleep(0.1)
+            time.sleep(0.35)
             self.stop()
         elif(key_val==0x16):
             print("Button 1")
