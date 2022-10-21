@@ -2,8 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import os
 from flask_cors import CORS, cross_origin
 import multiprocessing
-
-from TrafficReportModule.StatusManagement import getStatuses, insertStatus
+import time
 
 
 os.putenv('LANG', 'en_US.UTF-8')
@@ -30,8 +29,9 @@ CORS(app)
 @app.route("/status", methods=['GET'])
 @cross_origin()
 def home():
-    status = getStatuses()
+    status = trafficReportModule.getStatuses()
     return status
+    
     
 
 
@@ -45,9 +45,14 @@ def home():
 
 def startServer():
     app.run(host='0.0.0.0', port=5000)
-    return
-
-def startHttpServer():
-  p = multiprocessing.Process(target=startServer, args=())
+    
+p = multiprocessing.Process(target=startServer, args=())
+def startHttpServer(TrafficReportModule):
+  global trafficReportModule
+  trafficReportModule = TrafficReportModule
   p.daemon = True
   p.start()
+  return p
+  
+  
+

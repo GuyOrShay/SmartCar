@@ -2,11 +2,20 @@ import json
 
 from TrafficReportModule.DriveStatus import DriveStatus
 
-statuses = []
-def insertStatus( description , severaty):
-    newStatus= DriveStatus(description,severaty)
-    statuses.append(newStatus.__dict__)
+class TrafficReportModule:
+    def __init__(self):
+        self.statuses = []
+        self.path = "./TrafficReportModule/status.json"
+    def insertStatus( self,description , severaty):
+        newStatus= DriveStatus(description,severaty)
+        with open(self.path,'r') as openFile:
+            self.statuses = json.load(openFile)
+            if(self.statuses.Length > 0):
+                self.statuses.append(newStatus)
+        with open(self.path , "w") as outfile:
+            json.dump(self.statuses.__dict__ ,outfile)
 
-def getStatuses():
-    jsonStr = json.dumps(statuses)
-    return jsonStr
+    def getStatuses(self):
+        with open(self.path,'r') as openFile:
+            jsonStr = json.load(openFile)
+            return jsonStr

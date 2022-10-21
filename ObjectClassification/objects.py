@@ -14,6 +14,7 @@ class objects:
         self.NUM_CLASSES = 90 
         self.IMAGE_SIZE = (12, 8) 
         self.filename = filename
+        
 
     def load_model(self):
         fileAlreadyExists = os.path.isfile(self.PATH_TO_CKPT) 
@@ -41,9 +42,11 @@ class objects:
         print('Finish Load Graph..')
     
     def predict(self):
-        
+        #ret, frame_i = self.capture.read()
+#       frame = cv2.flip(frame, -1) # Flip camera vertically
+#       frame = cv2.resize(frame,(320,240))
         frame_i = cv2.imread( self.filename)
-        frame = cv2.resize(frame_i,[640,640])
+        frame = cv2.resize(frame_i,(320,240))
         image_np_expanded = np.expand_dims(frame, axis=0) 
         
         (self.boxes, self.scores, self.classes, self.num) = self.sess.run( 

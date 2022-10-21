@@ -1,4 +1,4 @@
-from pydoc import describe
+import RPi.GPIO as GPIO
 from ObjectClassification.object__detection import test_tensor
 from ObjectClassification.objects import objects
 from Services.Camera.CameraController import cameraController
@@ -6,22 +6,20 @@ from Services.CheckDistance import check_distance
 from Services.FrontLedDisplay import matrix_display
 from Services.LaneAsistent import init_lane_sensors, is_car_in_road
 from Services.MotorDrive import MotorDrive
-from TrafficReportModule.StatusManagement import insertStatus
+from TrafficReportModule.StatusManagement import TrafficReportModule
 from TrafficReportModule.httpServer import startHttpServer
 from Traffic_sign_classification.predict import traffic
 from Services.AlertPlayer import alertPlayer
 from Services.getIR import recive_command_from_remote,init_id
+import cv2
 import time
 
-
-if __name__ == '__main__':   #Program entry
-   # test_tensor()
-   # print(object_detection.predict())
+def start(TrafficReportModule):
+   trafficReportModule = TrafficReportModule
    traffic_sign_predict = traffic("./Services/Camera/status.jpg") 
    object_detection = objects("./Services/Camera/status.jpg")
    object_detection.load_model()
    init_id()
-   startHttpServer()
    alert = alertPlayer()
    motorDrive = MotorDrive()
    camera = cameraController()
@@ -31,32 +29,43 @@ if __name__ == '__main__':   #Program entry
    while True:
         command = recive_command_from_remote()
         if(command != 0x00):
-          isPictureTaken = camera.getStatus()
           motorDrive.drive_cmd(command)
           matrix_display(command)
-          if(isPictureTaken):
+          isPictureTaken = camera.getStatus()
+          if(True):
             # sign = traffic_sign_predict.trafficsign()
             detected_objects = object_detection.predict()
             distance_from_object = check_distance()
             for obj in detected_objects:
               accuracy = int(obj.accuracy * 100)
+              print(obj.name , " ___ ",accuracy)
+              accuracy = int(obj.accuracy * 100)
               if (accuracy > 80):
+                print("Insert document")
                 if(distance_from_object < 10):
-                  describe = "You close to crash into " , obj.name , " (" ,obj.accuricy, ") " 
-                  insertStatus( describe,"Error")
+                  describe = "You close to crash into " , obj.name , " (" ,accuracy, ") " 
+                  trafficReportModule.insertStatus( describe,"Error")
                 else:
-                  describe = "You close to " , obj.name , " (" ,obj.accuricy, ") " , distance_from_object , " cm"
-                  insertStatus(describe,"Warning")
+                  describe = "You close to " , obj.name , " (" ,obj.accuracy, ") " , distance_from_object , " cm"
+                  trafficReportModule.insertStatus(describe,"Warning")
+          else:
+            print("Error : Picture can't be taken") 
+          lane_status = is_car_in_road()  
+          if(lane_status == False):
+            trafficReportModule.insertStatus(" deviating from the path ","Error")
+          # camera.moveHorizontal()
+          # camera.moveVertical()
 
-          if(is_car_in_road() == False):
-            insertStatus(" deviating from the path ","Error")
-          camera.moveHorizontal()
-#    while True:
-#         isPictureTaken = camera.getStatus()
-#         print(isPictureTaken)
-#         if(isPictureTaken):
-#             sign = traffic_sign_predict.trafficsign()
-#             print(sign)
-#             if (sign == "STOP"):
-#                 print(sign)
-#                 alert.play()
+if __name__ == '__main__':   #Program entry
+  # test_tensor()
+  trafficReportModule = TrafficReportModule()
+  server = startHttpServer(trafficReportModule) 
+  try:
+    start(trafficReportModule)
+  except KeyboardInterrupt:
+    print("Measurement stopped by User")
+    GPIO.cleanup()
+    server.kill()  
+    cv2.VideoCapture(0).release()
+
+ 
