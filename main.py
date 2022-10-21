@@ -25,6 +25,7 @@ def start(TrafficReportModule):
    camera = cameraController()
    init_lane_sensors()
    object_detection.predict()
+   prevoius_lane_status = True
    print("Start listening..... !!")
    while True:
         command = recive_command_from_remote()
@@ -50,11 +51,11 @@ def start(TrafficReportModule):
                   trafficReportModule.insertStatus(describe,"Warning")
           else:
             print("Error : Picture can't be taken") 
-          lane_status = is_car_in_road()  
-          if(lane_status == False):
-            trafficReportModule.insertStatus(" deviating from the path ","Error")
-          # camera.moveHorizontal()
-          # camera.moveVertical()
+          lane_status = is_car_in_road()
+          if(prevoius_lane_status != lane_status):  
+            if(lane_status == False):
+              trafficReportModule.insertStatus(" deviating from the path ","Error")
+            prevoius_lane_status = lane_status
 
 if __name__ == '__main__':   #Program entry
   # test_tensor()
