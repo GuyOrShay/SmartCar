@@ -27,33 +27,32 @@ def start(TrafficReportModule):
    object_detection.predict()
    prevoius_lane_status = True
    print("Start listening..... !!")
+   distance_from_object = 0
    while True:
         command = recive_command_from_remote()
         if(command != 0x00):
-          motorDrive.drive_cmd(command)
+          motorDrive.drive_cmd(command,distance_from_object)
           matrix_display(command)
-          isPictureTaken = camera.getStatus()
-          if(True):
-            # sign = traffic_sign_predict.trafficsign()
-            detected_objects = object_detection.predict()
-            distance_from_object = check_distance()
-            alert.play(distance_from_object)
-            for obj in detected_objects:
-              accuracy = int(obj.accuracy * 100)
-              print(obj.name , " ___ ",accuracy)
-              if (accuracy > 70):
-                if(distance_from_object < 10):
-                  describe = "You close to crash in {} ({}%) {} cm".format(obj.name,accuracy,distance_from_object)
-                  trafficReportModule.insertStatus( describe,"Error")
-                else:
-                  describe = "You close to {} ({}%) {} cm".format(obj.name,accuracy,distance_from_object)
-                  trafficReportModule.insertStatus(describe,"Warning")
-          else:
-            print("Error : Picture can't be taken") 
+          camera.getStatus()
+          # sign = traffic_sign_predict.trafficsign()
+          detected_objects = object_detection.predict()
+          distance_from_object = check_distance()
+          alert.play(distance_from_object)
+          for obj in detected_objects:
+            accuracy = int(obj.accuracy * 100)
+            print(obj.name , " ___ ",accuracy)
+            if (accuracy > 50):
+              if(distance_from_object < 10):
+                describe = "You close to crash in {} ({}%) {} cm".format(obj.name,accuracy,distance_from_object)
+                trafficReportModule.insertStatus( describe,"Error")
+              else:
+                describe = "You close to {} ({}%) {} cm".format(obj.name,accuracy,distance_from_object)
+                trafficReportModule.insertStatus(describe,"Warning")
+        
           lane_status = is_car_in_road()
           if(prevoius_lane_status != lane_status):  
-            if(lane_status == False):
-              trafficReportModule.insertStatus("deviating from the path ","Error")
+            #if(lane_status == False):
+              #trafficReportModule.insertStatus("deviating from the path ","Error")
             prevoius_lane_status = lane_status
 
 if __name__ == '__main__':   #Program entry

@@ -60,9 +60,8 @@ class MotorDrive:
         self.pwm_R1.ChangeDutyCycle(0)
         self.pwm_R2.ChangeDutyCycle(0)
 
-    def drive_cmd(self,key_val):
-        if(key_val==0x46):
-            print("Button up")
+    def drive_cmd(self,key_val,distance):
+        if((key_val==0x46) and (distance>10)):
             GPIO.output(L_IN1,GPIO.LOW)  #Upper Left forward
             GPIO.output(L_IN2,GPIO.HIGH)
             self.pwm_L1.ChangeDutyCycle(50)
@@ -75,10 +74,9 @@ class MotorDrive:
             GPIO.output(R_IN3,GPIO.LOW)  #Lower Right forward
             GPIO.output(R_IN4,GPIO.HIGH)
             self.pwm_R2.ChangeDutyCycle(50)
-            time.sleep(0.5)
+            time.sleep(0.25)
             self.stop()
         elif(key_val==0x44):
-            print("Button left")
             GPIO.output(L_IN1,GPIO.HIGH)
             GPIO.output(L_IN2,GPIO.LOW)
             self.pwm_L1.ChangeDutyCycle(70)
@@ -97,7 +95,6 @@ class MotorDrive:
             print("Button ok")
             # self.stop()
         elif(key_val==0x43):
-            print("Button right")
             GPIO.output(L_IN1,GPIO.LOW)  #Upper Left forward
             GPIO.output(L_IN2,GPIO.HIGH)
             self.pwm_L1.ChangeDutyCycle(70)
